@@ -1,0 +1,10 @@
+matplotlib
+numpy<2
+packaging
+prettytable
+scipy
+regex
+yapf
+kornia==0.6
+ftfy
+huggingface-hub
