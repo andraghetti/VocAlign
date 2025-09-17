@@ -6,7 +6,19 @@
 
 # VocAlign: Source-free Domain Adaptation for Open-vocabulary Semantic Segmentation
 
-In this project we provide a method to perform source-free domain adaptation on CAT-Seg.
+This is the official implementation of VocAlign, a method to perform source-free domain adaptation on CAT-Seg. 
+VocAlign is presented in "Lost in Translation? Vocabulary Alignment for Source-Free Adaptation in Open-Vocabulary Semantic Segmentation", [BMVC 2025](https://bmvc2025.bmva.org/)
+If you find this code useful, please cite our work:
+
+```
+@inproceedings{Mazzucco2025lost,
+  title        = {Lost in Translation? Vocabulary Alignment for Source-Free Domain Adaptation in Open-Vocabulary Semantic Segmentation},
+  author       = {Mazzucco, Silvio and Persson, Carl and Segu, Mattia and Dovesi, Pier Luigi and Tombari, Federico and Van Gool, Luc and Poggi, Matteo},
+  booktitle    = {British Machine Vision Conference},
+  note         = {BMVC},
+  year         = {2025}
+}
+```
 
 ### Installation
 
