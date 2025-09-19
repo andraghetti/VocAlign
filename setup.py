@@ -196,5 +196,11 @@ if __name__ == '__main__':
             'mim': parse_requirements('requirements/mminstall.txt'),
             'multimodal': parse_requirements('requirements/multimodal.txt'),
         },
+        entry_points={
+            'console_scripts': [
+                'vocalign-train=tools.train:main',
+                'vocalign-test=tools.test:main',
+            ],
+        },
         ext_modules=[],
         zip_safe=False)

@@ -6,6 +6,8 @@
 
 # VocAlign: Source-free Domain Adaptation for Open-vocabulary Semantic Segmentation
 
+[![Docker Release](https://github.com/Sisso16/VocAlign/actions/workflows/docker.yml/badge.svg)](https://github.com/Sisso16/VocAlign/actions/workflows/docker.yml)
+
 This is the official implementation of VocAlign, a method to perform source-free domain adaptation on CAT-Seg. 
 VocAlign is presented in **"Lost in Translation? Vocabulary Alignment for Source-Free Adaptation in Open-Vocabulary Semantic Segmentation"**, [BMVC 2025](https://bmvc2025.bmva.org/)
 If you find this code useful, please cite our work:
@@ -22,32 +24,26 @@ If you find this code useful, please cite our work:
 
 ### Installation
 
-**Step 1.** Clone the repository with recursive option for the submodule.
-
-**Step 2.** Create a conda environment and activate it:
+**Step 1.** Clone the repository with recursive option for the submodule:
 
 ```shell
-conda create --name vocalign python=3.10 -y
+git clone --recursive https://github.com/Sisso16/VocAlign
+```
+
+If you already cloned without `--recursive`, initialize the submodule:
+
+```shell
+git submodule update --init --recursive
+```
+
+**Step 2.** Create conda environment and install packages:
+
+```shell
+conda env create -f environment.yml
+conda run -n vocalign mim install "mmcv==2.1.0"
 conda activate vocalign
 ```
 
-**Step 3.** Install PyTorch:
-
-```shell
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia
-conda install intel-openmp=2023.1.0 mkl=2023.1.0 tbb=2021.8.0 -c anaconda
-```
-
-**Step 4.** Install openmim, mmcv, and all the requirements in your conda environment:
-
-```shell
-pip install -U openmim
-mim install "mmcv==2.1.0"
-cd mmengine_adaptation
-pip install -v -e .
-cd ..
-pip install -v -e .
-```
 
 ### Dataset
 
@@ -90,18 +86,35 @@ To resume from pre-trained CAT-Seg, create a folder `work_dirs/cityscapes/`, in 
 
 #### Train VocAlign
 ```shell
-export PYTHONPATH=`pwd`:/*your_path*/CAT-Seg
-python tools/train.py configs/vocalign/cityscapes.py --resume
+vocalign-train configs/vocalign/cityscapes.py --resume
 ```
 
 #### Evaluate VocAlign
 In the config file set `lora_eval` to True. In `last_checkpoint` the path automatically updates at the end of VocAlign training. If you just want to perform inference without previously having conducted the training yourself, just copy paste manually the path to the desired VocAlign checkpoint.
 
 ```shell
-python tools/test.py configs/vocalign/cityscapes.py work_dirs/cityscapes/best_cityscapes.pth
+vocalign-test configs/vocalign/cityscapes.py work_dirs/cityscapes/best_cityscapes.pth
 ```
 
 If you want to visualize results generated during evaluation, specify the work_dir and change the `interval` in the `SegVisualizationHook` within the config file before launching the evaluation.
+
+### Docker Installation (Alternative)
+
+For a quick start or if you prefer containerized environments, you can use our pre-built Docker image:
+
+```shell
+# Train VocAlign
+docker run --platform linux/amd64 --rm --gpus all \
+  -v $(git rev-parse --show-toplevel):/workspace \
+  ghcr.io/sisso16/vocalign:latest \
+  vocalign-train configs/vocalign/cityscapes.py --resume
+
+# Evaluate VocAlign
+docker run --platform linux/amd64 --rm --gpus all \
+  -v $(git rev-parse --show-toplevel):/workspace \
+  ghcr.io/sisso16/vocalign:latest \
+  vocalign-test configs/vocalign/cityscapes.py work_dirs/cityscapes/best_cityscapes.pth
+```
 
 ### Other
 We based our code on the [mmsegmentation](https://github.com/open-mmlab/mmsegmentation) codebase.
